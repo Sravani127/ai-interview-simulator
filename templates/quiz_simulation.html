@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Simulation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background: url('{{ url_for("static", filename="images/signup-background.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .quiz-animation {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    width: 150px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .quiz-animation img {
+    width: 100%;
+    height: auto;
+    display: none; /* Initially hidden */
+  }
+
+  .quiz-animation img.active {
+    display: block;
+  }
+    </style>
+</head>
+<body>
+    <div class="quiz-animation" id="quiz-animation"></div>
+    <!-- Back button -->
+    <a href="javascript:goBack()" class="back-button">
+        <img src="{{ url_for('static', filename='images/left_arrow.png') }}" alt="Back" width="100" height="70">
+    </a>
+
+    <div class="quiz-simulation">
+        <h1 class="quiz-simulation-title">Quiz Simulation</h1>
+        <div id="quiz-container" class="quiz-container">
+            <div id="timer" class="quiz-timer">
+                Time Remaining: <span id="time-remaining">20</span> seconds
+            </div>
+            <div id="question-block" class="quiz-question-block"></div>
+            <button id="next-question" class="quiz-next-button" disabled>Next Question</button>
+        </div>
+    </div>
+
+    <!-- Pass questions data as a JavaScript variable -->
+    <script type="text/javascript">
+        const quizQuestions = JSON.parse(`{{ questions | tojson | safe }}`);
+        const topic = `{{ topic | safe }}`;
+        const difficulty = `{{ difficulty | safe }}`;
+        console.log("Quiz Questions Loaded:", quizQuestions);
+
+        // Go back to the previous page
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+    <!-- Load external JS file -->
+    <script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+Description
+Features ( desc )
+Technolgies Used ( AWS services used , Front end , Backend , languages , tools)
+AWS - redshift 
+
+login - cognito
+profile - 
+
+
+
+Services used
+
+1. Cognito ( for login purpose )
+2. Redshift for tables
+3. S3 for Transcripts storage
+4. Ec2
+
+
+
+package installations 
+
+pip install flask,flask_socketio,pyttsx3,speech_recognition,elevenlabs,openai,boto3,assemblyai,psycopg2,werkzeug,hmac,hashlib,base64
+
+
+Repo creation
+
+1. go into some folder named Veerendra-Clone-Project-ASP and enter following command in terminal 
+    "git clone https://github.com/bellapukondaveerendra/ai-interview-simulator.git"
+2. login into github deekshith account , create a new repository
+3. create a new folder( deekshith-asp-final-project ) and copy paste all the files from Veerendra-Clone-Project-ASP folder 
+4. git init
+5. git add .
+6. git commit -m "first commit"
+7. git branch -M main
+8. git remote add origin **https://github.com/deekshith/samplerepo.git**
+9. git push -u origin main

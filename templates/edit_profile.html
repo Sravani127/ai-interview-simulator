@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<style>
+    body {
+        background: url('{{ url_for("static", filename="images/signup-background.jpg") }}') no-repeat center center fixed;
+        background-size: cover;
+    }
+</style>
+<body>
+        <!-- Back button -->
+        <a href="javascript:goBack()" class="back-button">
+            <img src="{{ url_for('static', filename='images/left_arrow.png') }}" alt="Back" width="100" height="70">
+        </a>
+    <div class="edit-profile-container">
+        <h1 class="edit-profile-heading">Edit Profile</h1>
+        <form class="edit-profile-form" action="/edit_profile" method="POST" enctype="multipart/form-data">
+            <div class="edit-profile-field">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="{{ user_data[0] }}" readonly>
+            </div>
+            
+            <div class="edit-profile-field">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="{{ user_data[1] }}" readonly>
+            </div>
+            
+            <div class="edit-profile-field">
+                <label for="phone">Phone:</label>
+                <input type="tel" id="phone" name="phone" value="{{ user_data[2] }}" readonly>
+            </div>
+            
+            <div class="edit-profile-field">
+                <label for="job_title">Job Title:</label>
+                <input type="text" id="job_title" name="job_title" value="{{ user_data[3] }}" required>
+            </div>
+            
+            <div class="edit-profile-field">
+                <label for="experience">Experience:</label>
+                <input type="text" id="experience" name="experience" value="{{ user_data[4] }}" required>
+            </div>
+            
+            <div class="edit-profile-field">
+                <label for="resume">Resume:</label>
+                <a href="{{ user_data[14] }}" target="_blank" class="current-resume-link">Current Resume</a><br>
+                <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx">
+            </div>
+            
+            <button type="submit" class="edit-profile-submit-btn">Save Changes</button>
+        </form>
+    </div>
+    <script type="text/javascript">
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

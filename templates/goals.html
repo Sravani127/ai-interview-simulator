@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Preparation Goals</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('{{ url_for("static", filename="images/signup-background.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            overflow-y: auto; /* Allow vertical scrolling */
+            height: 100%; /* Ensure body takes up the full height of the viewport */
+        }
+        .goal-container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            overflow: hidden; /* Prevent accidental overflow issues */
+            min-height: 100vh; /* Ensure container always fills the viewport height */
+        }
+        .goal-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .goal-list .goal-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .goal-details h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+        .goal-details p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: #777;
+        }
+        .progress {
+            height: 100%;
+            width: var(--progress-width); /* Dynamic progress width */
+            background-color: #4caf50; /* Progress bar color */
+            color: black; /* Text color */
+            font-size: 12px;
+            text-align: center;
+            line-height: 20px; /* Centers text vertically */
+            white-space: nowrap; /* Prevent text wrapping */
+            border-radius: 8px; /* Matches the bar's rounded edges */
+            position: relative;
+        }
+        .progress .text {
+            color: black; /* Default text color for visibility */
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 0;
+            line-height: 20px; /* Centers text vertically */
+            text-align: center;
+            font-weight: bold; /* Makes the text stand out */
+        }
+        .progress-pie {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+        .progress-pie svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+        .progress-pie circle {
+            fill: none;
+            stroke-width: 8;
+            stroke: #e0e0e0;
+        }
+        .progress-pie circle:nth-child(2) {
+            stroke: #4a90e2;
+            stroke-dasharray: 220;
+            stroke-dashoffset: calc(220 - (220 * var(--progress)) / 100);
+            transition: stroke-dashoffset 0.5s ease-in-out;
+        }
+
+        .progress p {
+            margin: 0;
+            position: absolute; /* Keeps text centered inside the bar */
+            width: 100%; /* Ensures full-width alignment */
+            top: 0;
+            left: 0;
+        }
+        .progress-bars {
+            flex: 1;
+            margin-left: 20px;
+        }
+        .progress-item {
+            display: flex;
+            flex-direction: column; /* Stacks the label and bar vertically */
+            align-items: flex-start; /* Aligns items to the left */
+            margin-bottom: 10px; /* Adds spacing between items */
+        }
+        .progress-item {
+            display: flex;
+            flex-direction: column; /* Stacks the label and bar vertically */
+            align-items: flex-start; /* Aligns items to the left */
+            margin-bottom: 10px; /* Adds spacing between items */
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #ddd; /* Light gray background */
+            border-radius: 8px;
+            overflow: hidden; /* Ensures no overflow of content */
+            height: 20px;
+            position: relative;
+        }
+        .progress-bar .progress {
+            height: 100%;
+            background: #4a90e2;
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+        <!-- Back button -->
+        <a href="javascript:goBack()" class="back-button">
+            <img src="{{ url_for('static', filename='images/left_arrow.png') }}" alt="Back" width="100" height="70">
+        </a>
+    <div class="goal-container">
+        <div class="goal-header">
+            <h1>Your Preparation Goals</h1>
+            <p>Track and manage your preparation goals. Create a new goal to stay on track!</p>
+        </div>
+
+        <!-- Dynamic Goal List -->
+        <!-- <div id="goal-list" class="goal-list"></div> -->
+        <div id="goal-list" class="goal-list">
+            {% for goal in goals %}
+            <div class="goal-card">
+                <div class="goal-details">
+                    <h3>{{ goal.name }}</h3>
+                    <p>Deadline: {{ goal.deadline }}</p>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-pie">
+                        <svg>
+                            <circle cx="40" cy="40" r="35"></circle>
+                            <circle cx="40" cy="40" r="35" style="--progress: {{ goal.progress }};"></circle>
+                        </svg>
+                        <div class="progress-text">{{ goal.progress }}%</div>
+                    </div>
+                    <div class="progress-bars">
+
+                        <div class="progress-item">
+                            <span>Quizzes</span>
+                            <div class="progress-bar">
+                                <div class="progress" style="--progress-width: {{ goal.quizzesProgress }}%;">
+                                    <div class="text">{{ goal.total_user_taken_quizes }} / {{ goal.total_quizes_to_be_taken }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <span>Mock Interviews</span>
+                            <div class="progress-bar">
+                                <div class="progress" style="--progress-width: {{ goal.interviewsProgress }}%;">
+                                    <div class="text">{{ goal.total_user_taken_interviews }} / {{ goal.total_interviews_to_be_taken }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="goal-actions">
+                    <button>Delete</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Create New Goal Form -->
+        <div class="create-goal-form">
+            <h2>Create a New Goal</h2>
+            <form action="/create_goal" method="POST">
+                <div class="goals-form-group">
+                    <label for="goal-name">Goal Name</label>
+                    <input type="text" id="goal-name" name="goal_name" placeholder="Enter goal name" required>
+                </div>
+
+                <div class="goals-form-group">
+                    <label for="concepts">Concepts to Prepare</label>
+                    <textarea id="concepts" name="concepts" placeholder="Enter concepts separated by commas" required></textarea>
+                </div>
+
+                <div class="goals-form-group">
+                    <label for="role">Topic you want to prepare</label>
+                    <select id="role" name="role" required>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="node_js">Node Js</option>
+                        <option value="c_cpp">C / C++</option>
+                        <option value="machine_learning">Machine Learning</option>
+                        <option value="data_structures">Data Structures</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="goals-form-group">
+                    <label for="deadline">Deadline</label>
+                    <select id="deadline" name="deadline" required>
+                        <option value="less_prep_time">In a week</option>
+                        <option value="mid_prep_time">1 - 2 weeks</option>
+                        <option value="more_prep_time">More than 2 weeks</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn">Create Goal</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

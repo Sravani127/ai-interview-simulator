@@ -1,0 +1,9 @@
+Start Quiz --> open AI to form the questions in a particular format --> quiz_simulation.html --> quiz.js --> form the question in UI with options and validate the user selected options and give a final Score --> submit Quiz result and send back to app.py --> insert quiz results into quiz_history redshift table and update user_goals table for goal history
+
+Start Interview --> interview_simulation.html --> interview.js --> start_interview is called which will call app.py --> openai is used for the interview conversation --> end interview will save the transcript to s3 json file --> s3 url is stored into interview_history redshift table for history showing purpose and update user_goals table for goal history
+
+Goals --> get user_taken_interviews, user_taken_quizes and query user_goals redshift table --> get the details and show in UI
+
+Review your work --> if Assessment is selected then query quiz_history table and show the question and answers he gave along with correct & user selected answers and explanation
+
+if Mock Interview is selected then interview_history table is queried and will get the transcript url which will be queried from s3 along with score , feedback

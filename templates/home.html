@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Interview Simulation Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <style>
+        body {
+            background: url('{{ url_for("static", filename="images/signup-background.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="home-page">
+    <div id="bg-slideshow"></div>
+    <!-- Header Section -->
+    <header class="header">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Platform Logo" class="header-logo" onclick="redirectToHome()">
+        <div class="header-profile">
+            <span>Welcome, {{ name }}!</span>
+            <div class="profile-dropdown">
+                <img src="{{ url_for('static', filename='images/profile-icon.png') }}" alt="Profile Icon" class="profile-icon" onclick="toggleDropdown()">
+                <div id="dropdown-menu" class="dropdown-menu">
+                    <a href="{{ url_for('edit_profile') }}">Edit Profile</a>
+                    <a href="#" onclick="logout()">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard Section -->
+    <main class="dashboard">
+
+        <section class="card prepare-card">
+            <h3>Prepare for Quiz</h3>
+            <p>Practice quizzes to test your knowledge and improve your skills.</p>
+            <button class="start-btn" onclick="redirectToQuiz()">Start Quiz</button>
+        </section>     
+
+        <section class="card prepare-card">
+            <h3>Prepare for Interview</h3>
+            <p>Simulate mock interviews to prepare for real-world scenarios!</p>
+            <button class="start-btn" onclick="redirectToInterview()">Start Interview</button>
+        </section>        
+        
+        <section class="card activity-card">
+            <h3>Review Your Work</h3>
+            <p>Analyze your past performance to identify areas for improvement.</p>
+            <button class="start-btn" onclick="redirectToHistory()">Review</button>
+        </section>
+        
+        <section class="card insights-card">
+            <h3>Enhance Your Skills</h3>
+            <p>Explore tutorials and resources to boost your knowledge.</p>
+            <button onclick="redirectToShowSkills()" class="start-btn">Explore Skills</button>
+        </section>
+
+        <section class="card goal-card">
+            <h3>Set your preparation Goal</h3>
+            <p>Track your progress toward your preparation goals.</p>
+            <button onclick="redirectToGoals()" class="start-btn">Check your Progress</button>
+        </section>
+
+
+        
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <p>&copy; 2024 Interview Simulation Platform. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function logout() {
+            window.location.href = '{{ url_for("login") }}'; // Redirect to login page on logout
+        }
+        function startPreparation() {
+            window.location.href = '{{ url_for("prepare") }}';
+        }
+        function redirectToHome() {
+            window.location.href = '{{ url_for("home") }}';
+        }
+        function redirectToShowSkills() {
+            window.location.href = '{{ url_for("learn_skills") }}';
+        }
+        function redirectToQuiz() {
+            window.location.href = '/prepare_for_quiz'; // New route for quiz preparation
+        }
+        function redirectToInterview() {
+            window.location.href = '/prepare_for_interview';
+        }
+        function redirectToHistory() {
+            window.location.href = '/history';
+        }
+        function redirectToGoals() {
+            window.location.href = '/set_goals';
+        }
+    </script>
+</body>
+</html>

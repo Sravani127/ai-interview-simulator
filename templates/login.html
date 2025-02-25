@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+    <style>
+        body {
+            background: url('{{ url_for("static", filename="images/signup-background.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .toggle-password {
+            position: relative;
+            display: inline-block;
+        }
+
+        .toggle-password img {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .input-group.invalid input {
+            border: 2px solid red;
+        }
+
+        .input-group.valid input {
+            border: 2px solid green;
+        }
+        /* Password toggle icon */
+        #toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2 class="form-title">Login</h2>
+            <p class="form-subtitle">Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
+            <form id="login-form">
+                <!-- Email -->
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="login-email" name="email" placeholder="you@example.com" required>
+                </div>
+                <!-- Password -->
+                <div class="input-group" style="position: relative;">
+                    <label for="password">Password</label>
+                    <input type="password" id="login-password" name="password" placeholder="Enter your password" required>
+                         <img src="{{ url_for('static', filename='images/password-hide.png') }}" 
+                         alt="Show Password" 
+                         id="toggle-password" 
+                         width="20" 
+                         height="20" 
+                         style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;" 
+                         onclick="togglePassword()">
+                </div>
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+        </div>
+        <!-- Illustration Section -->
+        <div class="image-section">
+            <img src="{{ url_for('static', filename='images/signup-illustration.png') }}" alt="Login Illustration">
+        </div>
+    </div>
+    <script>
+    // Function to toggle password visibility
+        function togglePassword() {
+            const passwordField = document.getElementById('login-password');
+            const toggleImg = document.getElementById('toggle-password');
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleImg.src = "{{ url_for('static', filename='images/password-view.png') }}"; // Change to 'Show' icon
+                toggleImg.alt = "Hide Password";
+            } else {
+                passwordField.type = 'password';
+                toggleImg.src = "{{ url_for('static', filename='images/password-hide.png') }}"; // Change to 'Hide' icon
+                toggleImg.alt = "Show Password";
+            }
+        }
+    </script>
+
+</body>
+</html>

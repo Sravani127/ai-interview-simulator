@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <style>
+        body {
+            background: url('{{ url_for("static", filename="images/signup-background.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        /* Validation criteria styling */
+        .validation-list {
+            margin-top: 10px;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .validation-list li {
+            color: red;
+            font-size: 0.9rem;
+        }
+
+        .validation-list li.valid {
+            color: green;
+        }
+
+        .password-toggle {
+            position: relative;
+            display: inline-block;
+        }
+
+        .password-toggle img {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        .input-group.invalid input {
+            border: 2px solid red;
+        }
+
+        .input-group.valid input {
+            border: 2px solid green;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2 class="form-title">Sign Up</h2>
+            <p class="form-subtitle">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+            <form id="signup-form">
+                <!-- Full Name -->
+                <div class="input-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+                <!-- Email -->
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                </div>
+                <!-- Password -->
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="password-toggle">
+                        <input type="password" id="password" name="password" placeholder="Enter a password" required>
+                        <img src="{{ url_for('static', filename='images/password-hide.png') }}" alt="Show Password" id="toggle-password" width="15" height="15">
+                    </div>
+                    <!-- Password Validation -->
+                    <ul class="validation-list" id="password-criteria">
+                        <li id="uppercase"><span class="status-icon">✗</span> 1 Uppercase Letter</li>
+                        <li id="lowercase"><span class="status-icon">✗</span> 1 Lowercase Letter</li>
+                        <li id="number"><span class="status-icon">✗</span> 1 Number</li>
+                        <li id="special"><span class="status-icon">✗</span> 1 Special Character</li>
+                    </ul>
+                </div>
+                <!-- Confirm Password -->
+                <div class="input-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Re-enter your password" required>
+                    <span id="password-match-message" style="color: red; font-size: 0.9rem; display: none;">Passwords do not match</span>
+                </div>
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">Sign Up</button>
+            </form>
+        </div>
+        <!-- Illustration Section -->
+        <div class="image-section">
+            <img src="{{ url_for('static', filename='images/signup-illustration.png') }}" alt="Signup Illustration">
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            const password = $("#password");
+            const confirmPassword = $("#confirm-password");
+            const passwordCriteria = {
+                uppercase: /[A-Z]/,
+                lowercase: /[a-z]/,
+                number: /\d/,
+                special: /[!@#$%^&*(),.?":{}|<>]/
+            };
+
+            // Toggle password visibility
+            $("#toggle-password").on("click", function () {
+                const type = password.attr("type") === "password" ? "text" : "password";
+                password.attr("type", type);
+                $(this).attr("src", type === "password" ? "{{ url_for('static', filename='images/password-hide.png') }}" : "{{ url_for('static', filename='images/password-view.png') }}");
+            });
+
+            // Password criteria validation
+            password.on("input", function () {
+                const value = password.val();
+                // Check criteria and toggle valid/invalid classes
+        $("#uppercase")
+            .toggleClass("valid", passwordCriteria.uppercase.test(value))
+            .find(".status-icon")
+            .text(passwordCriteria.uppercase.test(value) ? "✔" : "✗");
+
+        $("#lowercase")
+            .toggleClass("valid", passwordCriteria.lowercase.test(value))
+            .find(".status-icon")
+            .text(passwordCriteria.lowercase.test(value) ? "✔" : "✗");
+
+        $("#number")
+            .toggleClass("valid", passwordCriteria.number.test(value))
+            .find(".status-icon")
+            .text(passwordCriteria.number.test(value) ? "✔" : "✗");
+
+        $("#special")
+            .toggleClass("valid", passwordCriteria.special.test(value))
+            .find(".status-icon")
+            .text(passwordCriteria.special.test(value) ? "✔" : "✗");
+            });
+
+            // Confirm password matching
+            confirmPassword.on("input", function () {
+                const match = password.val() === confirmPassword.val();
+                $("#password-match-message").toggle(!match);
+                confirmPassword.parent().toggleClass("invalid", !match);
+                confirmPassword.parent().toggleClass("valid", match);
+            });
+
+            // Form submission validation
+            $("#signup-form").on("submit", function (e) {
+                const match = password.val() === confirmPassword.val();
+                if (!match) {
+                    e.preventDefault();
+                    alert("Passwords do not match!");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

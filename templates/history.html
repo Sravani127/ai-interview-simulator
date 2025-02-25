@@ -1,0 +1,608 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Full-page styling */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background: url('{{ url_for("static", filename="images/signup-background.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+            overflow-y: auto; /* Allow full-page scrolling */
+        }
+
+        .history-container {
+            max-width: 800px;
+            margin: 50px auto; /* Center container vertically and horizontally */
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .history-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #4a90e2;
+            text-align: center;
+        }
+
+        .history-section {
+            margin-bottom: 20px;
+        }
+
+        .topic-card {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .topic-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0;
+            color: #4a90e2;
+        }
+
+        .quiz-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 8px 0;
+            background-color: #fff;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s ease;
+        }
+
+        .quiz-row:hover {
+            transform: scale(1.02);
+            background-color: #f9f9f9;
+        }
+
+        .quiz-row.green {
+            border-left: 6px solid #4caf50;
+        }
+
+        .quiz-row.yellow {
+            border-left: 6px solid #ffc107;
+        }
+
+        .quiz-row.red {
+            border-left: 6px solid #f44336;
+        }
+
+        .quiz-details {
+            display: none;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            margin-top: 5px;
+            border-left: 3px solid #4a90e2;
+        }
+
+        .quiz-details ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .quiz-details ul li {
+            margin-bottom: 10px;
+        }
+
+        .quiz-details h4 {
+            margin: 0 0 5px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .back-button img {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .back-button img:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <a href="javascript:goBack()" class="back-button">
+        <img src="{{ url_for('static', filename='images/left_arrow.png') }}" alt="Back" width="50" height="50">
+    </a>
+    <div class="history-container">
+        <h2 class="history-title">Review Your Assessments History</h2>
+
+        {% for topic in quiz_history %}
+        <div class="history-section">
+            <div class="topic-card">
+                <h3 class="topic-title">{{ topic.topic }}</h3>
+                {% for quiz in topic.children %}
+                <div class="quiz-row {{ 'green' if quiz.score >= 90 else 'yellow' if quiz.score >= 70 else 'red' }}" onclick="toggleQuizDetails('{{ quiz.quizId }}')">
+                    <span>{{ quiz.difficulty }}</span>
+                    <span>{{ quiz.score }}% </span>
+                    <span>{{ quiz.date | datetimeformat }}</span>
+                </div>
+                <div id="details-{{ quiz.quizId }}" class="quiz-details">
+                    Loading details...
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+        // Toggle quiz details
+        function toggleQuizDetails(quizId) {
+            const detailsElement = document.getElementById(`details-${quizId}`);
+            if (detailsElement.style.display === "none" || !detailsElement.style.display) {
+                detailsElement.style.display = "block";
+                fetchQuizDetails(quizId, detailsElement);
+            } else {
+                detailsElement.style.display = "none";
+            }
+        }
+
+        // Fetch quiz details dynamically
+        async function fetchQuizDetails(quizId, container) {
+            container.textContent = "Loading...";
+            try {
+                const response = await fetch(`/get_quiz_details/${quizId}`);
+                const data = await response.json();
+                container.innerHTML = `
+                    <strong>Questions:</strong>
+                    <ul>
+                        ${data.questions.map(q => `
+                            <li>
+                                <h4>${q.question}</h4>
+                                <b>Correct Answer:</b> ${q.correct_answer}<br>
+                                <b>Your Answer:</b> ${q.user_answer}<br>
+                                <b>Explanation:</b> ${q.explanation || 'N/A'}
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+            } catch (error) {
+                container.textContent = "Failed to load details.";
+            }
+        }
+    </script>
+</body>
+</html> -->
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Specific styling for the History page */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background: url('{{ url_for("static", filename="images/signup-background.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .history-container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .history-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4a90e2;
+        }
+        .dropdown-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .dropdown-select {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid #4a90e2;
+            border-radius: 25px;
+            background-color: white;
+            color: #4a90e2;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-select:hover {
+            background-color: #e6f3ff;
+        }
+
+        .dropdown-select:focus {
+            outline: none;
+            border-color: #2e73b8;
+        }
+
+        .topic-card {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .quiz-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 8px 0;
+            background-color: #fff;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s ease;
+            gap: 15px; /* Add space between child divs */
+        }
+        .quiz-row .quiz-info {
+            margin: 0 10px; /* Add margin between elements */
+            white-space: nowrap; /* Prevent wrapping */
+        }
+        .quiz-row:hover {
+            transform: scale(1.02);
+            background-color: #f9f9f9;
+        }
+
+        .quiz-row.green {
+            border-left: 6px solid #4caf50;
+        }
+
+        .quiz-row.yellow {
+            border-left: 6px solid #ffc107;
+        }
+
+        .quiz-row.red {
+            border-left: 6px solid #f44336;
+        }
+
+        .quiz-details {
+            display: none;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            margin-top: 5px;
+            border-left: 3px solid #4a90e2;
+        }
+
+        .quiz-details ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .quiz-details ul li {
+            margin-bottom: 10px;
+        }
+
+        .quiz-details h4 {
+            margin: 0 0 5px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .back-button img {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .back-button img:hover {
+            transform: scale(1.1);
+        }
+         /* Modal Styles */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1000; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0, 0, 0, 0.8); /* Black background with opacity */
+    }
+
+    .modal-content {
+        background-color: #fff;
+        margin: 10% auto; /* 10% from the top and centered */
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 600px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .close-button {
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close-button:hover {
+        color: red;
+    }
+
+    .transcript-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .message {
+        padding: 10px;
+        border-radius: 8px;
+        max-width: 90%;
+    }
+
+    .system {
+        background-color: #f0f0f0;
+        color: #555;
+        align-self: center;
+    }
+
+    .assistant {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+        align-self: flex-start;
+    }
+
+    .user {
+        background-color: #bbdefb;
+        color: #0d47a1;
+        align-self: flex-end;
+    }
+
+    .feedback-section {
+        margin-top: 20px;
+        padding: 10px;
+        border-top: 1px solid #ddd;
+    }
+    .transcript-btn {
+    display: inline-block;
+    padding: 10px 20px; /* Adjust padding for size */
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    background-color: #4a90e2; /* Blue background */
+    border: none;
+    border-radius: 25px; /* Rounded corners */
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
+}
+
+.transcript-btn:hover {
+    background-color: #357ab8; /* Darker blue on hover */
+    transform: scale(1.05); /* Slightly larger on hover */
+}
+
+.transcript-btn:active {
+    background-color: #285f8f; /* Even darker on click */
+    transform: scale(0.95); /* Slightly smaller when clicked */
+}
+
+.transcript-btn:focus {
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.4); /* Focus ring */
+}
+    </style>
+</head>
+<body>
+
+        <!-- Modal for displaying transcript -->
+        <div id="transcript-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeModal()">&times;</span>
+                <h2>Interview Transcript</h2>
+                <div id="transcript-content" class="transcript-container">
+                    <!-- Transcript will be dynamically populated here -->
+                </div>
+            </div>
+        </div>
+
+    <a href="javascript:goBack()" class="back-button">
+        <img src="{{ url_for('static', filename='images/left_arrow.png') }}" alt="Back" width="50" height="50">
+    </a>
+    <div class="history-container">
+        <div class="history-header">
+            <h2 class="history-title">Review Your Work</h2>
+        </div>
+        <div class="dropdown-container">
+            <select id="history-dropdown" class="dropdown-select" onchange="toggleHistoryView()">
+                <option value="assessments">Assessments</option>
+                <option value="interviews">Mock Interviews</option>
+            </select>
+        </div>
+        <div id="assessments-history" class="history-section">
+            <h3>Assessments</h3>
+            {% for topic in quiz_history %}
+            <div class="topic-card">
+                <h4>{{ topic.topic }}</h4>
+                {% for quiz in topic.children %}
+                <div class="quiz-row {{ 'green' if quiz.score >= 90 else 'yellow' if quiz.score >= 70 else 'red' }}" onclick="toggleQuizDetails('{{ quiz.quizId }}')">
+                    <div  class="quiz-info">
+                        <strong>Difficulty:</strong> {{ quiz.difficulty | capitalize }}
+                    </div>
+                    <div  class="quiz-info">
+                        <strong>Score:</strong> {{ quiz.score }}%
+                    </div>
+                    <div  class="quiz-info">
+                        <strong>Date:</strong> {{ quiz.date | datetimeformat }}
+                    </div>
+                </div>
+                <div id="details-{{ quiz.quizId }}" class="quiz-details">
+                    Loading details...
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div id="interviews-history" class="history-section" style="display: none;">
+            <h3>Mock Interviews</h3>
+            {% for interview in interview_history %}
+            <div class="topic-card">
+                <h4>Date: {{ interview.interview_date | datetimeformat }}</h4>
+                <p><strong>Score:</strong> {{ interview.score }}%</p>
+                <p><strong>Feedback:</strong> {{ interview.feedback }}</p>
+                <button class="transcript-btn" onclick="viewTranscript('{{ interview.interview_id }}')">View Transcript</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+        function toggleHistoryView() {
+            const dropdown = document.getElementById('history-dropdown');
+            const assessments = document.getElementById('assessments-history');
+            const interviews = document.getElementById('interviews-history');
+
+            if (dropdown.value === 'assessments') {
+                assessments.style.display = 'block';
+                interviews.style.display = 'none';
+            } else {
+                assessments.style.display = 'none';
+                interviews.style.display = 'block';
+            }
+        }
+
+        async function viewTranscript(interviewId) {
+            try {
+                const response = await fetch(`/get_transcript/${interviewId}`);
+                const data = await response.json();
+                if (data) {
+                    console.log("data",data)
+                    viewTranscriptData(data); // Call the function to populate and show the modal
+                } else {
+                    alert("No transcript available.");
+                }
+            } catch (error) {
+                alert(error);
+            }
+        }
+
+                // Toggle quiz details
+        function toggleQuizDetails(quizId) {
+            const detailsElement = document.getElementById(`details-${quizId}`);
+            if (detailsElement.style.display === "none" || !detailsElement.style.display) {
+                detailsElement.style.display = "block";
+                fetchQuizDetails(quizId, detailsElement);
+            } else {
+                detailsElement.style.display = "none";
+            }
+        }
+                // Fetch quiz details dynamically
+        async function fetchQuizDetails(quizId, container) {
+            container.textContent = "Loading...";
+            try {
+                const response = await fetch(`/get_quiz_details/${quizId}`);
+                const data = await response.json();
+                container.innerHTML = `
+                    <strong>Questions:</strong>
+                    <ul>
+                        ${data.questions.map(q => `
+                            <li>
+                                <h4>${q.question}</h4>
+                                <b>Correct Answer:</b> ${q.correct_answer}<br>
+                                <b>Your Answer:</b> ${q.user_answer}<br>
+                                <b>Explanation:</b> ${q.explanation || 'N/A'}
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+            } catch (error) {
+                container.textContent = "Failed to load details.";
+            }
+        }
+
+        // Show the modal with formatted transcript
+function viewTranscriptData(transcriptData) {
+    const modal = document.getElementById("transcript-modal");
+    const content = document.getElementById("transcript-content");
+    content.innerHTML = ""; // Clear previous content
+
+    // Populate transcript
+    transcriptData.transcript.forEach((message) => {
+        const messageDiv = document.createElement("div");
+        messageDiv.classList.add("message", message.role);
+        messageDiv.textContent = message.content;
+        content.appendChild(messageDiv);
+    });
+
+    // Add feedback and score at the bottom
+    const feedbackSection = document.createElement("div");
+    feedbackSection.className = "feedback-section";
+    feedbackSection.innerHTML = `
+        <strong>Score:</strong> ${transcriptData.score}<br>
+        <strong>Feedback:</strong> ${transcriptData.feedback}
+    `;
+    content.appendChild(feedbackSection);
+
+    // Display modal
+    modal.style.display = "block";
+}
+
+// Close the modal
+function closeModal() {
+    const modal = document.getElementById("transcript-modal");
+    modal.style.display = "none";
+}
+    </script>
+</body>
+</html>
+
+
